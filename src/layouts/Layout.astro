@@ -1,0 +1,53 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  current?: "home" | "history" | "releases";
+}
+
+const { title, description = "System status and release notes for raastey.", current } = Astro.props;
+const fullTitle = current === "home" ? "raastey status" : `${title} · raastey status`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{fullTitle}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="site">
+      <header class="site-header">
+        <h1><a href="/" style="color: inherit; text-decoration: none">raastey</a> status</h1>
+        <p class="tagline">Real-time and historical system performance</p>
+        <nav class="site-nav" aria-label="Status sections">
+          <a href="/" aria-current={current === "home" ? "page" : undefined}>Current status</a>
+          <a href="/history/" aria-current={current === "history" ? "page" : undefined}>Incident history</a>
+          <a href="/releases/" aria-current={current === "releases" ? "page" : undefined}>Release notes</a>
+        </nav>
+      </header>
+      <main id="main">
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <a href="https://www.raastey.app">raastey.app</a>
+        <a href="https://writer.raastey.app">Writer</a>
+        <a href="https://github.com/raastey/raastey-status">Source</a>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  @import "../styles/global.css";
+</style>

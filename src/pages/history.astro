@@ -1,0 +1,40 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { incidents, statusLabel } from "../lib/status";
+---
+
+<Layout
+  title="Incident history"
+  description="Past incidents and maintenance windows for raastey."
+  current="history"
+>
+  <p class="section-title">Past incidents</p>
+
+  {
+    incidents.length === 0 ? (
+      <div class="empty-state">
+        <p><strong>No incidents reported.</strong></p>
+        <p>When something affects writers, we post updates here with timestamps and affected components.</p>
+      </div>
+    ) : (
+      incidents.map((inc) => (
+        <article class="incident-card">
+          <h2>{inc.title}</h2>
+          <p class="kicker">
+            {inc.startedAt}
+            {inc.resolvedAt ? ` → resolved ${inc.resolvedAt}` : " · ongoing"}
+            {" · "}
+            {statusLabel(inc.impact)}
+          </p>
+          <ul>
+            {inc.updates.map((u) => (
+              <li>
+                <time datetime={u.at}>{u.at}</time> — {u.body}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))
+    )
+  }
+</Layout>

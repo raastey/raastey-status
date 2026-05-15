@@ -1,0 +1,29 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { releases } from "../lib/status";
+---
+
+<Layout
+  title="Release notes"
+  description="Writer-readable release notes for raastey."
+  current="releases"
+>
+  <p class="meta-line">
+    Narrative releases from <code>the-ways/RELEASE_NOTES.md</code>. Technical detail lives in CHANGELOG.
+  </p>
+
+  {
+    releases.map((r) => (
+      <article class="release-card">
+        <h2>
+          v{r.version} — <em>{r.title}</em>
+        </h2>
+        <p class="kicker">{r.date}{r.linearId ? ` · ${r.linearId}` : ""}</p>
+        <p>{r.summary}</p>
+        {r.body.map((para) => (
+          <p>{para}</p>
+        ))}
+      </article>
+    ))
+  }
+</Layout>

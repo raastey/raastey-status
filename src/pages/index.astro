@@ -1,0 +1,51 @@
+---
+import Layout from "../layouts/Layout.astro";
+import {
+  components,
+  overallStatus,
+  overallHeadline,
+  statusLabel,
+  statusUpdatedAt,
+} from "../lib/status";
+
+const updated = new Date(statusUpdatedAt).toLocaleString("en-GB", {
+  dateStyle: "medium",
+  timeStyle: "short",
+  timeZone: "UTC",
+});
+---
+
+<Layout title="Current status" current="home">
+  <section class={`status-banner status-banner--${overallStatus}`} aria-live="polite">
+    <h2>{overallHeadline(overallStatus)}</h2>
+    <p>Last updated {updated} UTC · status is updated manually until automated monitoring ships.</p>
+  </section>
+
+  <p class="section-title">Components</p>
+  <ul class="component-list">
+    {
+      components.map((c) => (
+        <li class="component-row">
+          <div>
+            <h3>
+              {c.url ? (
+                <a href={c.url}>{c.name}</a>
+              ) : (
+                c.name
+              )}
+            </h3>
+            <p class="desc">{c.description}</p>
+          </div>
+          <span class={`status-pill status-pill--${c.status}`}>{statusLabel(c.status)}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="section-title">About this site</p>
+  <p>
+    This page reports the health of raastey's writer app, API, marketing site, and grammar service.
+    For what shipped in each release, see <a href="/releases/">release notes</a>.
+    Past incidents appear on <a href="/history/">incident history</a>.
+  </p>
+</Layout>

@@ -1,0 +1,95 @@
+{
+  "source": "/Users/zeeshankhan/Downloads/the-ways/RELEASE_NOTES.md",
+  "syncedAt": "2026-05-15T20:23:48.908Z",
+  "releases": [
+    {
+      "version": "0.5.1",
+      "title": "A whisper in Chrome",
+      "date": "2026-05-14",
+      "summary": "Some assists do not need to leave your machine. If you write in **Google Chrome** and the browser exposes its built-in language model, raastey now offers an **experimental opt-in**: select prose, open the command palette, and run **Rewrite selection · Chrome on-device**. The text",
+      "linearId": "RAA-145",
+      "body": [
+        "Some assists do not need to leave your machine. If you write in **Google Chrome** and the browser exposes its built-in language model, raastey now offers an **experimental opt-in**: select prose, open the command palette, and run **Rewrite selection · Chrome on-device**. The text goes to **Chrome’s on-device model** only — not through raastey’s cloud AI router for that action. The first time the capability appears, a calm gate asks whether to turn it on; **Not now** remembers your choice on this profile. You can always open **Chrome on-device assists · review setup…** from the palette to change your mind, or **turn off** when you are done experimenting. **Ask raastey** is unchanged everywhere else, and other browsers see no new surface."
+      ]
+    },
+    {
+      "version": "0.5.0",
+      "title": "The pillars hold",
+      "date": "2026-05-12",
+      "summary": "The writer's-toolbox umbrella closes today. Five pillars in place — dictionary, grammar, spellcheck, metrics, AI — and a deploy stack ready to carry them.",
+      "linearId": "RAA-97",
+      "body": [
+        "The writer's-toolbox umbrella closes today. Five pillars in place — dictionary, grammar, spellcheck, metrics, AI — and a deploy stack ready to carry them.",
+        "`Cmd+Shift+G` toggles grammar on any draft. Sentences with issues pick up a soft underline; click for a suggestion chip and the rule that flagged it. The check runs against a self-hosted [LanguageTool](https://languagetool.org) — your prose never leaves the raastey backend. Draft writers see the clear-errors subset, real mistakes only, no style nits. Cloud writers see the full rule-set.",
+        "The spellcheck pillar learned a second locale. Open the command palette, pick \"Spellcheck language → en-GB\" once, and \"realise\" stops getting underlined for as long as you write on that machine. The custom dictionary you've built up follows you across locales — teach raastey a word once, it stays taught.",
+        "New writers now land on a blank canvas with one calm line at the top: `⌘ palette · ⌘ D dictionary · ⌘ ? shortcuts`. Start typing and the line disappears. Click the small `×` and it never returns on this machine. No splash, no tour, no modal — just one line the writer can lean on for half a minute and forget about.",
+        "The AI router now resolves on two dimensions instead of one: where you are *and* which tier you write on. Draft writers get the voice lane backed by Groq, Cerebras, NVIDIA, and OpenRouter as a quiet safety net at the end of the chain. Cloud writers get the same lane plus DeepSeek for the structural surfaces, and a paid OpenRouter model when the natives fall over. Five providers, two surfaces, one calm panel. If a Draft writer ever asks for a Cloud-only surface, raastey responds with a single upgrade line instead of a silent fallback.",
+        "Both the toolbox and the AI panel now respect calm rate limits sized to your tier — high enough that you almost never see them, low enough that a hammering script can't drain the budget. Draft writers get 20 grammar checks a minute, 60 dictionary lookups a minute, 30 AI prompts a day. Cloud writers get six times that. When you do hit a limit, raastey says *taking a breath · try again at HH:MM* and tells you when. No popups, no banners — a single chip in the place you were already looking, that quietly clears itself when the window passes."
+      ]
+    },
+    {
+      "version": "0.4.0",
+      "title": "The editor finds its voice",
+      "date": "2026-05-12",
+      "summary": "raastey shipped today as an editor a writer can actually live in, and a dictionary that knows every word she'll ask it.",
+      "linearId": "RAA-87",
+      "body": [
+        "raastey shipped today as an editor a writer can actually live in, and a dictionary that knows every word she'll ask it.",
+        "Eleven small upgrades, designed together so they feel like one. Open a draft and you'll find:",
+        "- **`Cmd+B`, `Cmd+I`, `Cmd+K`, lists, blockquotes** — markdown formatting under your fingers, no toolbar. - **`Cmd+?`** — the full shortcuts cheat sheet, on demand. - **`Cmd+.` — focus mode** — chrome hides, prose stays. Press it again to come back. - **Inline spellcheck** — every misspelling gets a soft underline. Click for suggestions or to add it to your personal dictionary. Runs entirely in your browser; nothing leaves the machine. - **`Cmd+Shift+O` — outline panel** — every heading in your draft, hierarchical, clickable. - **`Cmd+F`, `Cmd+Opt+F`** — find and replace, scoped to the document, with a calm panel that respects the editor's typography. - **`Cmd+Shift+E` — export** — copy as markdown, download a `.md` file, or copy as plain text for emails and slides. - **Smart typography** — `--` becomes an em dash, `...` becomes an ellipsis, straight quotes curl. Code blocks are left alone. Off by default for purists — toggle from the command palette. - **`Cmd+P` — quick-open drafts** — your most recent drafts at the top, with relative times so you remember which is which. - **Writing target** — set a session target from the palette, and the status bar shows progress with a small dot (`∘` → `○` → `●`). When you hit it, raastey nods once and goes back to staying out of the way.",
+        "`Cmd+D` on any word in your draft now opens a side panel with:",
+        "- **The definition** — from Free Dictionary, with Wiktionary as a fallback so rare and new words don't go empty. - **The sound of it** — a small play button when there's a recorded pronunciation. - **Where it came from** — a clean etymology, drawn from Wiktionary, English-only, with the wiki markup stripped away so what you read is prose. - **Synonyms and antonyms** — chip clusters, both clickable. Click a synonym and the panel re-runs on that word. Same for antonyms.",
+        "The lookup happens in parallel so a slow upstream never blocks the rest. Repeat lookups are cached — same word on the same day takes about a millisecond."
+      ]
+    },
+    {
+      "version": "0.3.0",
+      "title": "The desk gets a toolbox",
+      "date": "2026-05-11",
+      "summary": "raastey stopped being just an editor and became a writer's desk.",
+      "body": [
+        "raastey stopped being just an editor and became a writer's desk.",
+        "`Cmd+D` opens the toolbox — Free Dictionary for definitions, Datamuse for synonyms, both running in parallel. Select a word first to lookup that one; otherwise the panel uses the word at your cursor.",
+        "`Cmd+M` opens the writer metrics panel:",
+        "- **Readability** — Flesch-Kincaid Grade, Reading Ease, Coleman-Liau, ARI. Four perspectives, side by side. - **Sentence-length histogram** — five buckets, CSS-only chart. Spot the monotony. - **Passive-voice ratio** — tinted amber when it crosses 15%. - **Concordance** — your most-used words, click-to-jump.",
+        "Everything runs locally in your browser. Nothing is uploaded to score your draft.",
+        "The AI panel now closes the loop. Ask a question, then drop the answer at the cursor or replace your selection. The writing stays in your hands; the AI just slides things into place."
+      ]
+    },
+    {
+      "version": "0.2.0",
+      "title": "Foundations under the editor",
+      "date": "2026-05-11",
+      "summary": "The day raastey became a real app you could log into.",
+      "body": [
+        "The day raastey became a real app you could log into.",
+        "- **Sign in** — email-only magic link, with Google as an alternative once keys are provisioned. JWT in an HttpOnly cookie; nothing else stored client-side. - **Write something, anywhere** — the CodeMirror 6 editor lives at `/editor`. Command palette (`Cmd+/`), status bar, the bones of the writing surface. - **Your drafts persist** — every keystroke autosaves about half a second after you stop typing. Each save snapshots into version history. raastey Draft (the no-cost tier) keeps three active documents at a time. - **An AI that answers fast** — the streaming `/api/ai/chat` endpoint speaks the OpenAI Chat Completions wire format and routes across Groq, NVIDIA NIM, and DeepSeek (the latter skipped for EU users). One Rust client, four shapes of intelligence.",
+        "This release is the floor under everything that came after."
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "title": "raastey, in public",
+      "date": "2026-05-08",
+      "summary": "→ 2026-05-11",
+      "body": [
+        "→ 2026-05-11",
+        "raastey arrived as a marketing site and a brand spine.",
+        "- **The site** — `raastey.app` shipped with `/`, `/about`, `/pricing`, `/privacy`, and `/terms`. Variant C, the literary one, won the typography exploration. - **The `/pricing` page** — three one-time tiers, no subscriptions. The no-cost tier is **raastey Draft**; the paid tiers (raastey Cloud `$5` lifetime, raastey Desktop `$20` lifetime) sit as `Coming soon` cards until Stripe is wired. - **The waitlist** — a quiet `/start` page captures interest while the web app finishes. The endpoint moved into the Rust backend so the marketing site can stay pure static. - **The brand** — raastey is always lowercase. The word \"free\" never appears in writer-facing copy; the no-cost tier earns its name. Both rules are enforced by Cursor's always-on rule layer so every future change inherits them. - **A design system** — `design-system/` is the single source of truth for colors, typography, spacing, motion. Marketing site and web app both consume the same CSS tokens; the desktop app will inherit them via `tokens.json` when Tauri starts."
+      ]
+    },
+    {
+      "version": "0.0.1",
+      "title": "Project zero",
+      "date": "2026-05-08",
+      "summary": "A workspace, a Cursor configuration, a PRD baseline, and the agent personas that have run every thread in this repo since.",
+      "body": [
+        "A workspace, a Cursor configuration, a PRD baseline, and the agent personas that have run every thread in this repo since.",
+        "This is where the company started.",
+        "## How to read this file going forward",
+        "- **A release that adds a writer-facing feature** gets its own section here, with the calm voice the writer-facing surfaces use. - **A hotfix** gets a short paragraph appended under the previous release, or its own `0.x.y` section if the fix is substantial. - **An infrastructure-only change** does not appear here — it lives in `CHANGELOG.md` under `Internal`.",
+        "The discipline that keeps this file honest lives in [`.cursor/rules/changelog-discipline.mdc`](.cursor/rules/changelog-discipline.mdc). Every agent in this repo reads it before they commit."
+      ]
+    }
+  ]
+}

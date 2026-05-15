@@ -1,0 +1,32 @@
+{
+  "updatedAt": "2026-05-15T20:00:00.000Z",
+  "components": [
+    {
+      "id": "writer",
+      "name": "Writer",
+      "description": "writer.raastey.app — drafts, editor, sign-in",
+      "status": "operational",
+      "url": "https://writer.raastey.app"
+    },
+    {
+      "id": "api",
+      "name": "API",
+      "description": "www.raastey.app/api — auth, billing, AI, documents",
+      "status": "operational",
+      "url": "https://www.raastey.app/api/health"
+    },
+    {
+      "id": "marketing",
+      "name": "Marketing",
+      "description": "www.raastey.app — product, pricing, checkout start",
+      "status": "operational",
+      "url": "https://www.raastey.app"
+    },
+    {
+      "id": "languagetool",
+      "name": "Grammar (LanguageTool)",
+      "description": "Self-hosted grammar checks for Cloud writers",
+      "status": "operational"
+    }
+  ]
+}
