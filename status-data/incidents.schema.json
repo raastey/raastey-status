@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://status.raastey.app/schemas/incidents.json",
+  "title": "raastey status incidents",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "title", "status", "impact", "createdAt", "updates"],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Stable slug, e.g. 2026-05-14-writer-degraded"
+      },
+      "title": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string",
+        "enum": ["investigating", "identified", "monitoring", "resolved"]
+      },
+      "impact": {
+        "type": "string",
+        "enum": ["none", "minor", "major", "critical"]
+      },
+      "affectedComponents": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Component ids from components.json"
+      },
+      "createdAt": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "resolvedAt": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "updates": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["at", "body"],
+          "properties": {
+            "at": { "type": "string", "format": "date-time" },
+            "status": {
+              "type": "string",
+              "enum": ["investigating", "identified", "monitoring", "resolved"]
+            },
+            "body": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

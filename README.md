@@ -1,92 +1,89 @@
 # raastey status
 
-Public system status and release notes for [raastey](https://www.raastey.app), hosted on **GitHub Pages** at **https://status.raastey.app**.
+Public system status and release notes at [status.raastey.app](https://status.raastey.app).
 
-Tracked in Linear: [RAA-166](https://linear.app/factoura/issue/RAA-166) · Notion: [status.raastey.app spec](https://www.notion.so/361d508f2aac812e85fdd8f551772f48)
+Static [Astro](https://astro.build) site deployed to GitHub Pages. Tracked in Linear as [RAA-166](https://linear.app/factoura/issue/RAA-166).
 
 ## Pages
 
-| Path | Purpose |
-|------|---------|
-| `/` | Component status (Writer, API, Marketing, LanguageTool) |
-| `/history/` | Past incidents |
-| `/releases/` | Writer-readable release notes |
+| Route | Purpose |
+|-------|---------|
+| `/` | Overall status banner + component health rows |
+| `/history` | Past incidents (empty until something is posted) |
+| `/releases` | Writer-readable release notes from JSON |
 
-Design references: [GitHub Status](https://www.githubstatus.com/), [Claude Status](https://status.claude.com/).
+## DNS setup (GitHub Pages custom domain)
+
+1. Create a GitHub repo (e.g. `raastey/raastey-status`) and push this project to `main`.
+2. In the repo: **Settings → Pages → Build and deployment** → Source: **GitHub Actions**.
+3. After the first successful deploy, set **Custom domain** to `status.raastey.app` and enable **Enforce HTTPS**.
+4. At your DNS provider, add a **CNAME** record:
+   - **Name:** `status` (or `status.raastey.app` depending on provider)
+   - **Target:** `<org>.github.io` (e.g. `raastey.github.io`)
+5. `public/CNAME` in this repo already contains `status.raastey.app` so Pages keeps the mapping on deploy.
+
+Verify with `dig status.raastey.app CNAME` once DNS propagates.
+
+## Updating status
+
+### Component health (`status-data/components.json`)
+
+Edit each component’s `status`:
+
+- `operational` — working normally
+- `degraded` — slower or partial impact
+- `partial_outage` — significant subset affected
+- `outage` — unavailable
+- `maintenance` — planned work
+
+Bump `updatedAt` to an ISO-8601 UTC timestamp, commit, and push to `main`. The deploy workflow rebuilds the site.
+
+### Incidents (`status-data/incidents.json`)
+
+Add objects that match `status-data/incidents.schema.json`. Each incident needs `id`, `title`, `status`, `impact`, `createdAt`, and `updates[]`. Resolved incidents stay in the file for `/history`.
+
+### Releases (`status-data/releases.json`)
+
+**Manual:** edit JSON directly.
+
+**From product repo:** when `../the-ways/RELEASE_NOTES.md` exists (sibling checkout):
+
+```bash
+npm run sync-releases
+# or: node scripts/sync-releases.mjs /path/to/RELEASE_NOTES.md
+```
+
+Commit the updated `status-data/releases.json` and push.
 
 ## Local development
 
 ```bash
-npm ci
-npm run dev
+npm install
+npm run dev      # http://localhost:4321
+npm run build
+npm run preview
 ```
 
-Open http://localhost:4321
+## Project layout
 
-## Update operational status
-
-Edit `status-data/components.json`:
-
-- Set each component `status` to `operational`, `degraded`, `partial_outage`, `major_outage`, or `maintenance`
-- Bump `updatedAt` to the current ISO timestamp
-- Commit and push to `main` — GitHub Actions deploys automatically
-
-## Update release notes
-
-Release narrative is sourced from [`the-ways/RELEASE_NOTES.md`](https://github.com/raastey/the-ways/blob/main/RELEASE_NOTES.md):
-
-```bash
-# With the-ways cloned as a sibling directory:
-npm run sync:releases
-
-# Or point at a checkout:
-RELEASE_NOTES_PATH=/path/to/the-ways/RELEASE_NOTES.md npm run sync:releases
+```text
+status-data/          # JSON source of truth (committed)
+  components.json
+  incidents.json
+  incidents.schema.json
+  releases.json
+scripts/
+  sync-releases.mjs   # RELEASE_NOTES.md → releases.json
+src/
+  pages/              # index, history, releases
+public/
+  CNAME               # status.raastey.app
+.github/workflows/
+  deploy.yml          # GitHub Pages (Actions)
 ```
 
-`prebuild` runs the sync script when the file is found. You can also edit `status-data/releases.json` directly for urgent publishes.
+## Related
 
-## Report an incident
-
-Append to `status-data/incidents.json`:
-
-```json
-{
-  "id": "2026-05-15-writer-degraded",
-  "title": "Elevated errors on Writer",
-  "impact": "degraded",
-  "startedAt": "2026-05-15T14:00:00Z",
-  "resolvedAt": "2026-05-15T15:30:00Z",
-  "components": ["writer", "api"],
-  "updates": [
-    {
-      "at": "2026-05-15T14:00:00Z",
-      "status": "degraded",
-      "body": "We are investigating elevated 5xx responses on the writer app."
-    },
-    {
-      "at": "2026-05-15T15:30:00Z",
-      "status": "operational",
-      "body": "The issue is resolved. All systems are operational."
-    }
-  ]
-}
-```
-
-Set affected components to `degraded` or worse in `components.json` while the incident is open.
-
-## Custom domain (director)
-
-1. **GitHub:** Repo → Settings → Pages → Build: GitHub Actions → Custom domain: `status.raastey.app` → Enforce HTTPS
-2. **DNS:** Add a `CNAME` record: `status` → `raastey.github.io` (see [GitHub Pages custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site))
-3. Wait for DNS + certificate provisioning (up to ~24h)
-
-`CNAME` in repo root and `public/CNAME` both contain `status.raastey.app`.
-
-## Deploy
-
-Push to `main`. Workflow `.github/workflows/deploy.yml` builds with Astro and publishes to GitHub Pages.
-
-## Non-goals (v1)
-
-- Automated uptime probes ([RAA-97](https://linear.app/factoura/issue/RAA-97))
-- Email / RSS subscriptions
+- Product release narrative: `the-ways/RELEASE_NOTES.md`
+- Technical changelog: `the-ways/CHANGELOG.md`
+- Linear: [RAA-166 — status.raastey.app](https://linear.app/factoura/issue/RAA-166)

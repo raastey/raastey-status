@@ -1,90 +1,77 @@
 import componentsData from "../../status-data/components.json";
-import incidentsData from "../../status-data/incidents.json";
+import incidentsRaw from "../../status-data/incidents.json";
 import releasesData from "../../status-data/releases.json";
+import type { ComponentStatus, Incident, Release, StatusComponent } from "./types";
 
-export type ComponentStatus = "operational" | "degraded" | "partial_outage" | "major_outage" | "maintenance";
+const STATUS_RANK: Record<ComponentStatus, number> = {
+  operational: 0,
+  maintenance: 1,
+  degraded: 2,
+  partial_outage: 3,
+  outage: 4,
+};
 
-export interface Component {
-  id: string;
-  name: string;
-  description: string;
-  status: ComponentStatus;
-  url?: string;
-}
+export type OverallStatus = ComponentStatus;
 
-export interface IncidentUpdate {
-  at: string;
-  status: ComponentStatus;
-  body: string;
-}
+export const components = componentsData.components as StatusComponent[];
+export const statusUpdatedAt = componentsData.updatedAt;
 
-export interface Incident {
-  id: string;
-  title: string;
-  impact: ComponentStatus;
-  startedAt: string;
-  resolvedAt?: string;
-  components: string[];
-  updates: IncidentUpdate[];
-}
+const incidentsPayload = incidentsRaw as Incident[] | { incidents?: Incident[] };
+export const incidents: Incident[] = Array.isArray(incidentsPayload)
+  ? incidentsPayload
+  : (incidentsPayload.incidents ?? []);
 
-export interface Release {
-  version: string;
-  title: string;
-  date: string;
-  summary: string;
-  linearId?: string;
-  body: string[];
-}
+export const releases = (releasesData.releases ?? []) as Release[];
 
-const STATUS_ORDER: ComponentStatus[] = [
-  "major_outage",
-  "partial_outage",
-  "degraded",
-  "maintenance",
-  "operational",
-];
-
-export function worstStatus(statuses: ComponentStatus[]): ComponentStatus {
-  for (const s of STATUS_ORDER) {
-    if (statuses.includes(s)) return s;
+export function deriveOverallStatus(list: StatusComponent[]): OverallStatus {
+  if (!list.length) return "operational";
+  let worst: ComponentStatus = "operational";
+  for (const c of list) {
+    if (STATUS_RANK[c.status] > STATUS_RANK[worst]) worst = c.status;
   }
-  return "operational";
+  return worst;
+}
+
+export const overallStatus = deriveOverallStatus(components);
+
+const OVERALL_HEADLINE: Record<OverallStatus, string> = {
+  operational: "All systems operational",
+  degraded: "Some systems degraded",
+  partial_outage: "Partial system outage",
+  outage: "Major system outage",
+  maintenance: "Scheduled maintenance",
+};
+
+const COMPONENT_LABEL: Record<ComponentStatus, string> = {
+  operational: "Operational",
+  degraded: "Degraded",
+  partial_outage: "Partial outage",
+  outage: "Major outage",
+  maintenance: "Maintenance",
+};
+
+export function overallHeadline(status: OverallStatus): string {
+  return OVERALL_HEADLINE[status];
 }
 
 export function statusLabel(status: ComponentStatus): string {
-  switch (status) {
-    case "operational":
-      return "Operational";
-    case "degraded":
-      return "Degraded";
-    case "partial_outage":
-      return "Partial outage";
-    case "major_outage":
-      return "Major outage";
-    case "maintenance":
-      return "Maintenance";
-  }
+  return COMPONENT_LABEL[status];
 }
 
-export function overallHeadline(status: ComponentStatus): string {
-  switch (status) {
-    case "operational":
-      return "All systems operational";
-    case "degraded":
-      return "Some systems degraded";
-    case "partial_outage":
-      return "Partial system outage";
-    case "major_outage":
-      return "Major system outage";
-    case "maintenance":
-      return "Scheduled maintenance";
-  }
+export function formatUpdatedAt(iso?: string): string {
+  if (!iso) return "unknown";
+  return (
+    new Intl.DateTimeFormat("en-GB", {
+      dateStyle: "medium",
+      timeStyle: "short",
+      timeZone: "UTC",
+    }).format(new Date(iso)) + " UTC"
+  );
 }
 
-export const components = componentsData.components as Component[];
-export const incidents = incidentsData.incidents as Incident[];
-export const releases = releasesData.releases as Release[];
-export const statusUpdatedAt = componentsData.updatedAt;
-
-export const overallStatus = worstStatus(components.map((c) => c.status));
+export function heroClass(status: OverallStatus): string {
+  if (status === "operational") return "operational";
+  if (status === "outage") return "outage";
+  if (status === "maintenance") return "maintenance";
+  return "degraded";
+}

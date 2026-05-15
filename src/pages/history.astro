@@ -1,6 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { incidents, statusLabel } from "../lib/status";
+import { basePath } from "../lib/paths";
+import { incidents } from "../lib/status";
+
+const home = basePath();
 ---
 
 <Layout
@@ -8,28 +11,33 @@ import { incidents, statusLabel } from "../lib/status";
   description="Past incidents and maintenance windows for raastey."
   current="history"
 >
-  <p class="section-title">Past incidents</p>
+  <h1 class="page-title">Incident history</h1>
+  <p class="lead">
+    Past incidents and scheduled maintenance. When something affects writers, we post updates here.
+    <a href={home}>Back to current status</a>.
+  </p>
 
   {
     incidents.length === 0 ? (
       <div class="empty-state">
-        <p><strong>No incidents reported.</strong></p>
-        <p>When something affects writers, we post updates here with timestamps and affected components.</p>
+        <strong>No incidents reported</strong>
+        <p>All systems have been running without a published incident.</p>
       </div>
     ) : (
       incidents.map((inc) => (
         <article class="incident-card">
-          <h2>{inc.title}</h2>
-          <p class="kicker">
-            {inc.startedAt}
-            {inc.resolvedAt ? ` → resolved ${inc.resolvedAt}` : " · ongoing"}
-            {" · "}
-            {statusLabel(inc.impact)}
+          <h3>{inc.title}</h3>
+          <p class="meta">
+            {inc.impact} impact · {inc.status} ·{" "}
+            {new Date(inc.createdAt).toLocaleDateString("en-GB")}
+            {inc.resolvedAt
+              ? ` → resolved ${new Date(inc.resolvedAt).toLocaleDateString("en-GB")}`
+              : ""}
           </p>
           <ul>
             {inc.updates.map((u) => (
               <li>
-                <time datetime={u.at}>{u.at}</time> — {u.body}
+                <time datetime={u.at}>{new Date(u.at).toUTCString()}</time> — {u.body}
               </li>
             ))}
           </ul>

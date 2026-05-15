@@ -1,0 +1,65 @@
+---
+import type { ComponentStatus } from "../lib/types";
+
+interface Props {
+  status: ComponentStatus;
+}
+
+const { status } = Astro.props;
+const days = 90;
+const segments = Array.from({ length: days }, (_, i) => {
+  if (status !== "operational" && i >= days - 3) return status;
+  return "operational";
+});
+---
+
+<div class="uptime" aria-hidden="true" title="Uptime over the past 90 days (illustrative until automated monitoring)">
+  <div class="uptime__track">
+    {segments.map((s) => (
+      <span class={`uptime__seg uptime__seg--${s}`} />
+    ))}
+  </div>
+  <span class="uptime__label">90 days ago</span>
+  <span class="uptime__label uptime__label--end">Today</span>
+</div>
+
+<style>
+  .uptime {
+    position: relative;
+    margin-top: 0.65rem;
+    padding-bottom: 1.1rem;
+  }
+  .uptime__track {
+    display: flex;
+    gap: 2px;
+    height: 34px;
+    align-items: stretch;
+  }
+  .uptime__seg {
+    flex: 1;
+    min-width: 0;
+    border-radius: 2px;
+    background: var(--ok);
+  }
+  .uptime__seg--degraded,
+  .uptime__seg--partial_outage {
+    background: var(--warn);
+  }
+  .uptime__seg--outage {
+    background: var(--down);
+  }
+  .uptime__seg--maintenance {
+    background: var(--maint);
+  }
+  .uptime__label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+  .uptime__label--end {
+    left: auto;
+    right: 0;
+  }
+</style>

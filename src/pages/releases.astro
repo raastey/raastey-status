@@ -1,6 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { basePath } from "../lib/paths";
 import { releases } from "../lib/status";
+
+const home = basePath();
 ---
 
 <Layout
@@ -8,22 +11,34 @@ import { releases } from "../lib/status";
   description="Writer-readable release notes for raastey."
   current="releases"
 >
-  <p class="meta-line">
-    Narrative releases from <code>the-ways/RELEASE_NOTES.md</code>. Technical detail lives in CHANGELOG.
+  <h1 class="page-title">Release notes</h1>
+  <p class="lead">
+    What shipped, in writer-readable English. Technical detail lives in the-ways CHANGELOG.
+    <a href={home}>Back to current status</a>.
   </p>
 
-  {
-    releases.map((r) => (
-      <article class="release-card">
-        <h2>
-          v{r.version} — <em>{r.title}</em>
-        </h2>
-        <p class="kicker">{r.date}{r.linearId ? ` · ${r.linearId}` : ""}</p>
-        <p>{r.summary}</p>
-        {r.body.map((para) => (
-          <p>{para}</p>
-        ))}
-      </article>
-    ))
-  }
+  <div class="release-list">
+    {
+      releases.map((r) => (
+        <article class="release">
+          <h3>
+            v{r.version} — <em>{r.title}</em>
+          </h3>
+          <p class="meta">
+            {r.date}
+            {r.linearId ? ` · ${r.linearId}` : ""}
+          </p>
+          <p>{r.summary}</p>
+          {r.sections?.map((section) => (
+            <section>
+              {section.heading && <h4>{section.heading}</h4>}
+              {section.paragraphs.map((para) => (
+                <p>{para}</p>
+              ))}
+            </section>
+          ))}
+        </article>
+      ))
+    }
+  </div>
 </Layout>

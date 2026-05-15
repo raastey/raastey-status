@@ -1,51 +1,59 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import UptimeBar from "../components/UptimeBar.astro";
+import { basePath } from "../lib/paths";
 import {
   components,
-  overallStatus,
+  formatUpdatedAt,
   overallHeadline,
+  overallStatus,
   statusLabel,
   statusUpdatedAt,
 } from "../lib/status";
 
-const updated = new Date(statusUpdatedAt).toLocaleString("en-GB", {
-  dateStyle: "medium",
-  timeStyle: "short",
-  timeZone: "UTC",
-});
+const history = basePath("history/");
+const releases = basePath("releases/");
 ---
 
-<Layout title="Current status" current="home">
-  <section class={`status-banner status-banner--${overallStatus}`} aria-live="polite">
-    <h2>{overallHeadline(overallStatus)}</h2>
-    <p>Last updated {updated} UTC · status is updated manually until automated monitoring ships.</p>
+<Layout
+  title="Current status"
+  current="home"
+  heroStatus={overallStatus}
+  heroTitle={overallHeadline(overallStatus)}
+  heroSubtitle={`Last updated ${formatUpdatedAt(statusUpdatedAt)} · Updated manually until automated monitoring ships.`}
+>
+  <section class="section-head">
+    <h2>Current status by service</h2>
+    <a href={history}>Incident history</a>
   </section>
 
-  <p class="section-title">Components</p>
-  <ul class="component-list">
+  <ul class="components">
     {
       components.map((c) => (
-        <li class="component-row">
-          <div>
-            <h3>
-              {c.url ? (
-                <a href={c.url}>{c.name}</a>
-              ) : (
-                c.name
-              )}
-            </h3>
-            <p class="desc">{c.description}</p>
-          </div>
-          <span class={`status-pill status-pill--${c.status}`}>{statusLabel(c.status)}</span>
+        <li class="component">
+          <header class="component__head">
+            <div>
+              <h3 class="component__name">
+                {c.url ? <a href={c.url}>{c.name}</a> : c.name}
+              </h3>
+              <p class="component__desc">{c.description}</p>
+            </div>
+            <span class={`status-label status-label--${c.status}`}>
+              {statusLabel(c.status)}
+            </span>
+          </header>
+          <p class="uptime-caption">Uptime over the past 90 days</p>
+          <UptimeBar status={c.status} />
         </li>
       ))
     }
   </ul>
 
-  <p class="section-title">About this site</p>
-  <p>
-    This page reports the health of raastey's writer app, API, marketing site, and grammar service.
-    For what shipped in each release, see <a href="/releases/">release notes</a>.
-    Past incidents appear on <a href="/history/">incident history</a>.
-  </p>
+  <aside class="about-blurb">
+    <p>
+      This page reports the health of raastey's writer app, API, marketing site, and grammar service.
+      Release narrative lives on <a href={releases}>release notes</a>.
+      Past incidents on <a href={history}>incident history</a>.
+    </p>
+  </aside>
 </Layout>
