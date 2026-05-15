@@ -1,7 +1,7 @@
 import { defineConfig } from "astro/config";
 
-// GitHub project Pages: /raastey-status/  ·  Custom domain: ASTRO_BASE=/ in Actions
-const base = process.env.ASTRO_BASE ?? "/raastey-status/";
+// Production (status.raastey.app) uses /. For github.io/raastey-status/ preview: ASTRO_BASE=/raastey-status/
+const base = process.env.ASTRO_BASE ?? "/";
 
 export default defineConfig({
   site: "https://status.raastey.app",

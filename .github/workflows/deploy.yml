@@ -32,6 +32,8 @@ jobs:
 
       - name: Build site
         run: npm run build
+        env:
+          ASTRO_BASE: /
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
