@@ -1,5 +1,6 @@
 {
   "updatedAt": "2026-05-21T13:45:00Z",
+  "overall": "operational",
   "components": [
     {
       "id": "writer",
@@ -41,5 +42,6 @@
       "description": "Pandoc renderer service (internal)",
       "status": "operational"
     }
-  ]
+  ],
+  "incidents": []
 }

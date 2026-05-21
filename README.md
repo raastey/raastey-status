@@ -1,8 +1,8 @@
-# raastey status
+# roono status
 
-Public system status and release notes at [status.raastey.app](https://status.raastey.app).
+Public system status and release notes at [status.roono.app](https://status.roono.app).
 
-Static [Astro](https://astro.build) site deployed to GitHub Pages. Tracked in Linear as [RAA-166](https://linear.app/factoura/issue/RAA-166).
+Static [Astro](https://astro.build) site deployed to GitHub Pages. Tracked in Linear as [RAA-166](https://linear.app/factoura/issue/RAA-166) / refresh [RAA-275](https://linear.app/factoura/issue/RAA-275).
 
 ## Pages
 
@@ -11,18 +11,17 @@ Static [Astro](https://astro.build) site deployed to GitHub Pages. Tracked in Li
 | `/` | Overall status banner + component health rows |
 | `/history` | Past incidents (empty until something is posted) |
 | `/releases` | Writer-readable release notes from JSON |
+| `/status.json` | Machine-readable feed for writer and roono-jr in-app banners |
 
 ## DNS setup (GitHub Pages custom domain)
 
-1. Create a GitHub repo (e.g. `raastey/raastey-status`) and push this project to `main`.
-2. In the repo: **Settings → Pages → Build and deployment** → Source: **GitHub Actions**.
-3. After the first successful deploy, set **Custom domain** to `status.raastey.app` and enable **Enforce HTTPS**.
-4. At your DNS provider, add a **CNAME** record:
-   - **Name:** `status` (or `status.raastey.app` depending on provider)
-   - **Target:** `<org>.github.io` (e.g. `raastey.github.io`)
-5. `public/CNAME` in this repo already contains `status.raastey.app` so Pages keeps the mapping on deploy.
+1. Repo: [raastey/roono-status](https://github.com/raastey/roono-status) on `main`.
+2. **Settings → Pages → Build and deployment** → Source: **GitHub Actions**.
+3. **Custom domain:** `status.roono.app`, **Enforce HTTPS** on.
+4. DNS **CNAME:** `status` → `raastey.github.io` (GitHub org username, not the repo name).
+5. `public/CNAME` contains `status.roono.app` so Pages keeps the mapping on deploy.
 
-Verify with `dig status.raastey.app CNAME` once DNS propagates.
+Verify with `dig status.roono.app CNAME` once DNS propagates.
 
 ## Updating status
 
@@ -36,7 +35,7 @@ Edit each component’s `status`:
 - `outage` — unavailable
 - `maintenance` — planned work
 
-Bump `updatedAt` to an ISO-8601 UTC timestamp, commit, and push to `main`. The deploy workflow rebuilds the site.
+Bump `updatedAt` to an ISO-8601 UTC timestamp, commit, and push to `main`. CI rebuilds the site and regenerates `public/status.json`.
 
 ### Incidents (`status-data/incidents.json`)
 
@@ -54,6 +53,10 @@ npm run sync-releases
 ```
 
 Commit the updated `status-data/releases.json` and push.
+
+### In-app feed (`status.json`)
+
+`npm run build` runs `scripts/build-status-json.mjs`, which merges `components.json` + active incidents into `public/status.json` for polling (writer: `VITE_STATUS_URL=https://status.roono.app/status.json`).
 
 ## Local development
 
@@ -73,11 +76,13 @@ status-data/          # JSON source of truth (committed)
   incidents.schema.json
   releases.json
 scripts/
-  sync-releases.mjs   # RELEASE_NOTES.md → releases.json
+  sync-releases.mjs       # RELEASE_NOTES.md → releases.json
+  build-status-json.mjs   # components + incidents → public/status.json
 src/
   pages/              # index, history, releases
 public/
-  CNAME               # status.raastey.app
+  CNAME               # status.roono.app
+  status.json         # generated at build (also committed for visibility)
 .github/workflows/
   deploy.yml          # GitHub Pages (Actions)
 ```
@@ -86,4 +91,4 @@ public/
 
 - Product release narrative: `the-ways/RELEASE_NOTES.md`
 - Technical changelog: `the-ways/CHANGELOG.md`
-- Linear: [RAA-166 — status.raastey.app](https://linear.app/factoura/issue/RAA-166)
+- Linear: [RAA-166 — status.roono.app](https://linear.app/factoura/issue/RAA-166)

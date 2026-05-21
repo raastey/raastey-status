@@ -14,14 +14,14 @@ interface Props {
 
 const {
   title,
-  description = "System status and release notes for raastey.",
+  description = "System status and release notes for roono.",
   current = "home",
   heroStatus,
   heroTitle,
   heroSubtitle,
 } = Astro.props;
 
-const fullTitle = current === "home" ? "raastey status" : `${title} · raastey status`;
+const fullTitle = current === "home" ? "roono status" : `${title} · roono status`;
 const home = basePath();
 const history = basePath("history/");
 const releases = basePath("releases/");
@@ -49,7 +49,7 @@ const releases = basePath("releases/");
       <div class="topbar__inner">
         <a class="brand" href={home}>
           <span class="brand__mark" aria-hidden="true">r</span>
-          <span>raastey status</span>
+          <span>roono status</span>
         </a>
         <nav class="topnav" aria-label="Status sections">
           <a href={home} aria-current={current === "home" ? "page" : undefined}>Status</a>
@@ -75,9 +75,10 @@ const releases = basePath("releases/");
     </main>
 
     <footer class="site-footer">
-      <a href="https://www.raastey.app">raastey.app</a>
-      <a href="https://writer.raastey.app">Writer</a>
-      <a href="https://github.com/raastey/raastey-status">Source</a>
+      <a href="https://roono.app">roono.app</a>
+      <a href="https://writer.roono.app">Writer</a>
+      <a href="https://jr.roono.app">roono-jr</a>
+      <a href="https://github.com/raastey/roono-status">Source</a>
     </footer>
   </body>
 </html>

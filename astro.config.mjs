@@ -1,10 +1,10 @@
 import { defineConfig } from "astro/config";
 
-// Production (status.raastey.app) uses /. For github.io/raastey-status/ preview: ASTRO_BASE=/raastey-status/
+// Production (status.roono.app) uses /. For github.io/roono-status/ preview: ASTRO_BASE=/roono-status/
 const base = process.env.ASTRO_BASE ?? "/";
 
 export default defineConfig({
-  site: "https://status.raastey.app",
+  site: "https://status.roono.app",
   base,
   trailingSlash: "always",
   output: "static",
